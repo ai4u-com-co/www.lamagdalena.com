@@ -1,4 +1,4 @@
-import { anthropic } from '@ai-sdk/anthropic'
+import { anthropic } from '@/lib/ai'
 import { generateText, ModelMessage, UserContent } from 'ai'
 import { NextResponse } from 'next/server'
 import { loadIncomePDFs, loadCostContext, buildSystemPrompt } from '@/lib/proyeccion'

@@ -7,6 +7,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "test:e2e": "playwright test",
     "parse-facturas": "node scripts/parse-facturas.mjs"
   },
@@ -14,11 +15,13 @@
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.58.2",
     "eslint": "^9",
-    "eslint-config-next": "15.5.15"
+    "eslint-config-next": "15.5.15",
+    "vitest": "^3.2.7"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.74",
     "@ai-sdk/react": "^3.0.177",
+    "@ai4u/config": "github:ai4u-com-co/config#v0.2.0",
     "@ai4u/design-system": "github:ai4u-com-co/sistemaDiseno#v1.4.0",
     "@ai4u/mc-sso": "github:ai4u-com-co/mc-sso#v1.2.0",
     "@react-pdf/renderer": "^4.5.1",

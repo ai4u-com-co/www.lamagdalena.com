@@ -1,5 +1,5 @@
 import { generateText, Output } from 'ai'
-import { anthropic } from '@ai-sdk/anthropic'
+import { anthropic } from './ai'
 import { z } from 'zod'
 
 const AnalysisSchema = z.object({
