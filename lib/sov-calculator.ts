@@ -1,5 +1,5 @@
 import { generateText } from 'ai'
-import { anthropic } from '@ai-sdk/anthropic'
+import { anthropic } from './ai'
 import type { SovEntity, SovAnalysis, SovEntityResult, SovTopPost } from './sov-supabase'
 
 function parseDate(val: unknown): string {
