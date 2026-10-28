@@ -3,6 +3,7 @@ import Hero from '@/components/organisms/Hero'
 import BlogCard from '@/components/molecules/BlogCard'
 import ServicesSection from '@/components/organisms/ServicesSection'
 import ContactSection from '@/components/organisms/ContactSection'
+import CauceTeaser from '@/components/organisms/CauceTeaser'
 import { storiesData } from '@/data/stories'
 
 const heroImages = [
@@ -88,6 +89,7 @@ export default function HomePage() {
       </section>
 
       <ServicesSection />
+      <CauceTeaser />
       <ContactSection />
     </main>
   )

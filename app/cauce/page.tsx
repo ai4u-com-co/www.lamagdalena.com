@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CauceNav from '@/components/cauce/CauceNav'
 import ContactForm from '@/components/cauce/ContactForm'
-import { CASOS, CLIENTES, GOLDEN_CIRCLE, INSTAGRAM_HANDLE, INSTAGRAM_URL, METHOD, PROOF, SERVICES } from '@/components/cauce/data'
+import { CASOS, CLIENTES, GOLDEN_CIRCLE, INSTAGRAM_HANDLE, INSTAGRAM_URL, METHOD, PROOF, SERVICES, SITE_LINKS } from '@/components/cauce/data'
 
 export default function CaucePage() {
   return (
@@ -239,7 +239,15 @@ export default function CaucePage() {
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
               {INSTAGRAM_HANDLE}
             </a>
-            <Link href="/">La Magdalena</Link>
+          </nav>
+          <nav aria-label="La Magdalena">
+            <p className="cauce-footer__title">La Magdalena</p>
+            <Link href="/">← Volver al sitio</Link>
+            {SITE_LINKS.map(l => (
+              <Link key={l.href} href={l.href}>
+                {l.label}
+              </Link>
+            ))}
           </nav>
         </div>
         <div className="cauce-container cauce-footer__legal">

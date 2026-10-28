@@ -8,6 +8,13 @@
 export const INSTAGRAM_URL = 'https://www.instagram.com/cauce_estudio'
 export const INSTAGRAM_HANDLE = '@cauce_estudio'
 
+/** Enlaces al sitio principal de La Magdalena (franja superior y pie de Cauce). */
+export const SITE_LINKS = [
+  { label: 'Somos', href: '/somos' },
+  { label: 'Historias', href: '/historias' },
+  { label: 'Jarupia', href: '/jarupia' },
+] as const
+
 export const NAV_LINKS = [
   { label: 'Estudio', href: '#estudio' },
   { label: 'Servicios', href: '#servicios' },

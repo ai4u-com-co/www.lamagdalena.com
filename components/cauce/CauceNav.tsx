@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { NAV_LINKS } from './data'
+import Link from 'next/link'
+import { NAV_LINKS, SITE_LINKS } from './data'
 
 export default function CauceNav() {
   const [open, setOpen] = useState(false)
@@ -18,6 +19,22 @@ export default function CauceNav() {
   const close = () => setOpen(false)
 
   return (
+    <>
+    <div className="cauce-topbar">
+      <div className="cauce-container cauce-topbar__inner">
+        <Link href="/" className="cauce-topbar__back">
+          <span aria-hidden="true">←</span> Volver a La Magdalena
+        </Link>
+        <p className="cauce-topbar__note">Cauce es el estudio de La Magdalena para organizaciones</p>
+        <nav className="cauce-topbar__links" aria-label="Sitio de La Magdalena">
+          {SITE_LINKS.map(l => (
+            <Link key={l.href} href={l.href}>
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </div>
     <header className="cauce-nav">
       <div className="cauce-nav__bar cauce-container">
         <a href="#top" className="cauce-nav__logo" onClick={close} aria-label="Cauce, estudio by La Magdalena. Ir al inicio">
@@ -60,8 +77,12 @@ export default function CauceNav() {
           <a href="#clientes" onClick={close}>
             Clientes
           </a>
+          <Link href="/" className="cauce-nav__home" onClick={close}>
+            <span aria-hidden="true">←</span> Volver a La Magdalena
+          </Link>
         </div>
       </nav>
     </header>
+    </>
   )
 }

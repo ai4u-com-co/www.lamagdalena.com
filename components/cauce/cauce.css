@@ -214,6 +214,68 @@
   cursor: progress;
 }
 
+/* ───────── Franja superior: vínculo con La Magdalena ───────── */
+
+.cauce-topbar {
+  background: var(--c-ink);
+  color: var(--c-cream);
+  font-size: 13px;
+}
+
+.cauce-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+}
+
+.cauce-topbar a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  text-decoration: none;
+  transition: color 0.5s var(--ease);
+}
+
+.cauce-topbar a:hover {
+  color: var(--c-mint);
+}
+
+.cauce-topbar__back {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.cauce-topbar__note,
+.cauce-topbar__links {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .cauce-topbar__note {
+    display: block;
+    color: #bdbab0;
+  }
+
+  .cauce-topbar__links {
+    display: flex;
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cauce-topbar__inner {
+    justify-content: flex-start;
+  }
+
+  .cauce-topbar__note {
+    margin-right: auto;
+    margin-left: 8px;
+  }
+}
+
 /* ───────── Nav ───────── */
 
 .cauce-nav {
@@ -314,6 +376,13 @@
 
 .cauce-nav__menu[hidden] {
   display: none;
+}
+
+.cauce-nav__menu .cauce-nav__home {
+  font-size: 16px;
+  gap: 8px;
+  color: var(--c-green);
+  border-bottom: 0;
 }
 
 .cauce-nav__menu a {
@@ -1055,8 +1124,8 @@
 
 @media (min-width: 768px) {
   .cauce-footer__grid {
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 64px;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
   }
 }
 
