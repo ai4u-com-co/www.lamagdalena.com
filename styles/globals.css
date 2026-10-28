@@ -3224,3 +3224,71 @@ figcaption {
   }
 }
 
+
+/* ─── Puerta a Cauce en la home ─── */
+.cauce-teaser {
+  background: #006852;
+  color: #c3ffed;
+  padding: clamp(4rem, 10vw, 8rem) 0;
+}
+
+.cauce-teaser__inner {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.cauce-teaser__brand img {
+  width: min(100%, 26rem);
+  height: auto;
+}
+
+.cauce-teaser__kicker {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.cauce-teaser h2 {
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  max-width: 20ch;
+  color: #c3ffed;
+}
+
+.cauce-teaser__copy p:not(.cauce-teaser__kicker) {
+  max-width: 52ch;
+  margin-bottom: 2rem;
+}
+
+.cauce-teaser__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 1.75rem;
+  border-radius: 999px;
+  background: #ff4f00;
+  color: #141414;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  transition: var(--transition-smooth);
+}
+
+.cauce-teaser__cta:hover,
+.cauce-teaser__cta:focus-visible {
+  background: #c3ffed;
+  color: #006852;
+}
+
+@media (min-width: 1024px) {
+  .cauce-teaser__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 5rem;
+  }
+}
