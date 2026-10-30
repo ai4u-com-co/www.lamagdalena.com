@@ -28,7 +28,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
           const section = entry.target
           const isLight =
             section.classList.contains('blog-section') ||
-            section.classList.contains('contact-main-section') ||
             section.classList.contains('historias-page') ||
             section.classList.contains('jarupia-page') ||
             // data-nav-theme="light" en la sección o en un contenedor suyo (páginas de arriba claro)
