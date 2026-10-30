@@ -467,56 +467,6 @@
   display: none;
 }
 
-.cauce-proof {
-  display: grid;
-  margin: clamp(40px, 6vw, 72px) 0 0;
-  border-top: 1.5px solid var(--c-ink);
-}
-
-.cauce-proof__item {
-  display: grid;
-  gap: 4px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(20, 20, 20, 0.15);
-}
-
-.cauce-proof dt {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(36px, 6vw, 56px);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--c-green);
-}
-
-.cauce-proof dd {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.4;
-  color: var(--c-muted);
-  max-width: 28ch;
-}
-
-.cauce-proof__source {
-  margin-top: 12px;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--c-muted);
-}
-
-@media (min-width: 640px) {
-  .cauce-proof {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px;
-  }
-
-  .cauce-proof__item {
-    border-bottom: 0;
-    padding: 24px 0 0;
-  }
-}
-
 @media (min-width: 1024px) {
   .cauce-hero__grid {
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);

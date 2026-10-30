@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CauceNav from '@/components/cauce/CauceNav'
 import ContactForm from '@/components/cauce/ContactForm'
-import { CASOS, CLIENTES, GOLDEN_CIRCLE, INSTAGRAM_HANDLE, INSTAGRAM_URL, METHOD, PROOF, SERVICES, SITE_LINKS } from '@/components/cauce/data'
+import { CASOS, CLIENTES, GOLDEN_CIRCLE, INSTAGRAM_HANDLE, INSTAGRAM_URL, METHOD, SERVICES, SITE_LINKS } from '@/components/cauce/data'
 
 export default function CaucePage() {
   return (
@@ -43,18 +43,6 @@ export default function CaucePage() {
                 <Image src="/cauce/casos/puntos-colombia.webp" alt="" fill sizes="(min-width: 1024px) 16rem, 0px" />
               </div>
             </div>
-          </div>
-
-          <div className="cauce-container">
-            <dl className="cauce-proof">
-              {PROOF.map(p => (
-                <div key={p.value} className="cauce-proof__item">
-                  <dt>{p.value}</dt>
-                  <dd>{p.label}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="cauce-proof__source">Café Diverso · Bancolombia</p>
           </div>
         </section>
 

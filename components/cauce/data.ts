@@ -22,12 +22,6 @@ export const NAV_LINKS = [
   { label: 'Casos', href: '#casos' },
 ] as const
 
-export const PROOF = [
-  { value: '+3 M', label: 'vistas en un solo episodio de Café Diverso' },
-  { value: '+200 mil', label: 'seguidores en TikTok, desde 70 mil' },
-  { value: '+40', label: 'entrevistas con líderes de diversidad' },
-] as const
-
 export const SERVICES = [
   {
     id: 'reputacion',
