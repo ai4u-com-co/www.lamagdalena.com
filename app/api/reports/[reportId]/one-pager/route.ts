@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportError } from '@/lib/serverLog'
 export const dynamic = 'force-dynamic'
 
 import { loadJob } from '@/lib/supabase'
@@ -32,6 +33,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
     })
   } catch (error) {
     console.error('One-pager generation error:', error)
+    await reportError('api/reports/one-pager', { reportId }, 'falló la generación del one-pager', error)
     return NextResponse.json({ error: 'Error generating one-pager' }, { status: 500 })
   }
 }

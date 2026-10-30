@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse, after } from 'next/server'
+import { reportError, withErrorLog } from '@/lib/serverLog'
 export const dynamic = 'force-dynamic'
 
 import { loadJob, updateJobStatus, saveRawData, saveAnalysis, savePdf, getRawData } from '@/lib/supabase'
@@ -21,7 +22,7 @@ interface Params {
   params: Promise<{ reportId: string }>
 }
 
-export async function POST(request: NextRequest, { params }: Params) {
+async function handlePOST(request: NextRequest, { params }: Params) {
   const { reportId } = await params
 
   // Fix 1: Verificar secret para evitar webhooks externos no autorizados
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest, { params }: Params) {
   }
 
   if (eventType.includes('FAILED') || body.eventData?.status === 'FAILED') {
+    await reportError('api/reports/apify-webhook', { reportId, runId: incomingRunId }, 'el run de Apify terminó en FAILED', new Error('ApifyRunFailed'))
     await updateJobStatus(reportId, { status: 'error', error: 'Apify actor run failed' })
     return NextResponse.json({ ok: true })
   }
@@ -100,6 +102,7 @@ export async function POST(request: NextRequest, { params }: Params) {
           return NextResponse.json({ ok: true, message: 'TikTok Stage 2 started' })
         } catch (err) {
           console.error(`[Webhook] Error starting TikTok Stage 2:`, err)
+          await reportError('api/reports/apify-webhook', { reportId }, 'no se pudo iniciar la etapa 2 de TikTok', err)
         }
       }
     }
@@ -122,6 +125,7 @@ export async function POST(request: NextRequest, { params }: Params) {
           return NextResponse.json({ ok: true, message: 'Instagram Stage 2 started' })
         } catch (err) {
           console.error(`[Webhook] Error starting Instagram Stage 2:`, err)
+          await reportError('api/reports/apify-webhook', { reportId }, 'no se pudo iniciar la etapa 2 de Instagram', err)
         }
       }
     }
@@ -175,14 +179,18 @@ export async function POST(request: NextRequest, { params }: Params) {
         const pdfUrl = await savePdf(reportId, pdfBuffer)
         await updateJobStatus(reportId, { status: 'complete', pdfUrl, error: undefined, generationCostUSD })
       } catch (err: any) {
+        await reportError('api/reports/apify-webhook', { reportId }, 'falló el pipeline de análisis/PDF', err)
         await updateJobStatus(reportId, { status: 'error', error: err?.message ?? 'Pipeline error' })
       }
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Pipeline error'
     console.error(`[report ${reportId}] pipeline error:`, message)
+    await reportError('api/reports/apify-webhook', { reportId }, 'falló el procesamiento del webhook', err)
     await updateJobStatus(reportId, { status: 'error', error: message })
   }
 
   return NextResponse.json({ ok: true })
 }
+
+export const POST = withErrorLog('api/reports/apify-webhook', handlePOST)

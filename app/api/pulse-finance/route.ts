@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withErrorLog } from '@/lib/serverLog'
 import { timingSafeEqual } from 'crypto'
 import { computeSummary, listMonths } from '@/lib/proyeccion'
 
@@ -29,7 +30,7 @@ function cleanMonth(m: string): string {
   return m.replace(/^[\d.]+\s*/, '').trim()
 }
 
-export async function GET(req: NextRequest) {
+async function handleGET(req: NextRequest) {
   const secret = process.env.MISSION_CONTROL_SECRET
   const provided = req.headers.get('x-mc-secret') ?? ''
 
@@ -59,3 +60,5 @@ export async function GET(req: NextRequest) {
     },
   })
 }
+
+export const GET = withErrorLog('api/pulse-finance', handleGET)

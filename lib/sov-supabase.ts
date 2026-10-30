@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { reportWarn } from '@/lib/serverLog'
 
 let supabaseInstance: SupabaseClient | null = null
 
@@ -141,6 +142,7 @@ export async function appendSovRawData(
     // Fallback: if the RPC doesn't exist yet (migration not applied), use the
     // old approach so the app keeps working while the migration is pending.
     console.warn('[SOV] append_sov_run_data RPC unavailable, falling back:', error.message)
+    await reportWarn('lib/sov-supabase', { sovId }, 'RPC append_sov_run_data no disponible; se usa el fallback', error)
     const job = await getSovJob(sovId)
     if (!job) throw new Error(`SOV job ${sovId} not found`)
     const updatedRawData = { ...job.rawData, [runKey]: items }

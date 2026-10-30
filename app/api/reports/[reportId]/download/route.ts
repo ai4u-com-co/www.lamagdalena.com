@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withErrorLog } from '@/lib/serverLog'
 export const dynamic = 'force-dynamic'
 
 import { loadJob } from '@/lib/supabase'
@@ -8,7 +9,7 @@ interface Params {
   params: Promise<{ reportId: string }>
 }
 
-export async function GET(_request: NextRequest, { params }: Params) {
+async function handleGET(_request: NextRequest, { params }: Params) {
   const { reportId } = await params
   const job = await loadJob(reportId)
 
@@ -25,3 +26,5 @@ export async function GET(_request: NextRequest, { params }: Params) {
     }
   })
 }
+
+export const GET = withErrorLog('api/reports/download', handleGET)

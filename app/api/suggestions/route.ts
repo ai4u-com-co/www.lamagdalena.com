@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { reportWarn } from '@/lib/serverLog'
 
 const BACKEND_URL = process.env.MAGDALENA_BACKEND_URL ?? "https://magdalena-backend.vercel.app"
 
@@ -17,7 +18,8 @@ export async function POST(req: NextRequest) {
     })
     const data = await upstream.json()
     return NextResponse.json(data)
-  } catch {
+  } catch (err) {
+    await reportWarn('api/suggestions', {}, 'el backend de sugerencias falló; se responden preguntas por defecto', err)
     return NextResponse.json({ questions: fallbackQuestions })
   }
 }

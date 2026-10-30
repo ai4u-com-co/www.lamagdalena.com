@@ -1,4 +1,5 @@
 import { updateJobStatus, saveRawData, saveAnalysis, savePdf, getRawData, JobData } from '@/lib/supabase'
+import { reportError } from '@/lib/serverLog'
 import { getRunInfo, fetchDatasetItems, startTikTokCommentsRun } from '@/lib/apify'
 import { analyzeData } from '@/lib/claude'
 import { getBaseUrl } from '@/lib/url'
@@ -100,6 +101,7 @@ export async function syncJobWithApify(reportId: string, job: JobData): Promise<
     }
   } catch (error) {
     console.error(`[Sync] Error sincronizando con Apify:`, error)
+    await reportError('api/reports/sync', { reportId }, 'error sincronizando con Apify', error)
   }
 
   return null
@@ -123,6 +125,7 @@ async function processAnalysis(reportId: string, data: unknown[], job: JobData) 
     const pdfUrl = await savePdf(reportId, pdfBuffer)
     await updateJobStatus(reportId, { status: 'complete', pdfUrl, error: undefined })
   } catch (err: any) {
+    await reportError('api/reports/sync', { reportId }, 'falló el análisis/PDF del reporte', err)
     await updateJobStatus(reportId, { status: 'error', error: err.message })
   }
 }

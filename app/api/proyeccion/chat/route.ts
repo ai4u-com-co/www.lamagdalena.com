@@ -1,11 +1,12 @@
 import { anthropic } from '@/lib/ai'
+import { reportError, withErrorLog } from '@/lib/serverLog'
 import { generateText, ModelMessage, UserContent } from 'ai'
 import { NextResponse } from 'next/server'
 import { loadIncomePDFs, loadCostContext, buildSystemPrompt } from '@/lib/proyeccion'
 
 export const maxDuration = 120
 
-export async function POST(req: Request) {
+async function handlePOST(req: Request) {
   const { prompt, selectedMonths }: { prompt: string; selectedMonths: string[] } = await req.json()
 
   const months     = Array.isArray(selectedMonths) ? selectedMonths : []
@@ -42,9 +43,12 @@ export async function POST(req: Request) {
     })
     return NextResponse.json({ content: result.text })
   } catch (err) {
+    await reportError('api/proyeccion/chat', {}, 'falló la generación del informe con IA', err)
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Error generando informe' },
       { status: 500 }
     )
   }
 }
+
+export const POST = withErrorLog('api/proyeccion/chat', handlePOST)

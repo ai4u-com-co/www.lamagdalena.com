@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportError } from '@/lib/serverLog'
 import { randomUUID } from 'crypto'
 import { saveJob, listReports, type JobData } from '@/lib/supabase'
 import { startActorRun } from '@/lib/apify'
@@ -8,7 +9,8 @@ export async function GET() {
   try {
     const reports = await listReports()
     return NextResponse.json(reports.slice(0, 20))
-  } catch {
+  } catch (err) {
+    await reportError('api/reports', {}, 'no se pudo listar los reportes (se responde [])', err)
     return NextResponse.json([], { status: 200 })
   }
 }
@@ -73,6 +75,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ reportId }, { status: 201 })
   } catch (error) {
     console.error('[API ERROR]:', error)
+    await reportError('api/reports', {}, 'falló la creación del reporte', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }

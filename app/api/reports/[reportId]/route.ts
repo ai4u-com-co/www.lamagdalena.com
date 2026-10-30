@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withErrorLog } from '@/lib/serverLog'
 export const dynamic = 'force-dynamic'
 
 import { loadJob } from '@/lib/supabase'
@@ -7,7 +8,7 @@ interface Params {
   params: Promise<{ reportId: string }>
 }
 
-export async function GET(_request: NextRequest, { params }: Params) {
+async function handleGET(_request: NextRequest, { params }: Params) {
   const { reportId } = await params
     const job = await loadJob(reportId)
     if (!job) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
@@ -21,3 +22,5 @@ export async function GET(_request: NextRequest, { params }: Params) {
 
     return NextResponse.json(job)
 }
+
+export const GET = withErrorLog('api/reports/get', handleGET)

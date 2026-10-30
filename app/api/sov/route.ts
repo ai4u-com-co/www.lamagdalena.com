@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportError } from '@/lib/serverLog'
 import { randomUUID } from 'crypto'
 import { saveSovJob, listSovJobs, type SovJobData, type SovEntity } from '@/lib/sov-supabase'
 import { startActorRun } from '@/lib/apify'
@@ -8,7 +9,8 @@ export async function GET() {
   try {
     const jobs = await listSovJobs()
     return NextResponse.json(jobs)
-  } catch {
+  } catch (err) {
+    await reportError('api/sov', {}, 'no se pudo listar los reportes SOV (se responde [])', err)
     return NextResponse.json([], { status: 200 })
   }
 }
@@ -74,6 +76,7 @@ export async function POST(request: NextRequest) {
             apifyRunIds[runKey] = runId
           } catch (err) {
             console.error(`[SOV] Failed to start ${runKey}:`, err)
+            await reportError('api/sov', { runKey }, 'no se pudo iniciar el scraper de Apify', err)
             launchErrors.push(runKey)
           }
         })
@@ -109,6 +112,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ sovId }, { status: 201 })
   } catch (error) {
     console.error('[SOV API ERROR]:', error)
+    await reportError('api/sov', {}, 'falló la creación del reporte SOV', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Error interno' },
       { status: 500 }
