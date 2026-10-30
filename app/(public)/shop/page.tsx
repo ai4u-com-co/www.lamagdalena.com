@@ -25,7 +25,7 @@ export default function ShopPage() {
   }, [activeCategory, searchTerm, sortBy])
 
   return (
-    <main className="shop-page">
+    <main className="shop-page" data-nav-theme="light">
       <section className="shop-commercial-header">
         <div className="container">
           <div className="shop-controls-wrapper">

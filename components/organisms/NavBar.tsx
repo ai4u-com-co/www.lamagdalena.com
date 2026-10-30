@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import NavLinks from '@/components/molecules/NavLinks'
+import { useScrolled } from './useScrolled'
 
 interface NavBarProps {
   theme?: 'dark' | 'light'
@@ -26,6 +27,7 @@ const footerMenuItems = [
 export default function NavBar({ theme = 'dark' }: NavBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
+  const scrolled = useScrolled()
 
   useEffect(() => {
     document.body.classList.toggle('body-locked', isMenuOpen)
@@ -44,10 +46,33 @@ export default function NavBar({ theme = 'dark' }: NavBarProps) {
     p => pathname.includes(p) && pathname !== '/historias' && pathname !== '/shop'
   )
 
-  const themeClass = theme === 'light' ? 'theme-light' : 'theme-dark'
+  // Sobre la barra con fondo (ya se bajó) las letras van siempre oscuras; arriba, según la sección.
+  const themeClass = scrolled || theme === 'light' ? 'theme-light' : 'theme-dark'
+
+  // Estando ya en "/", el Link no navega (misma URL): se sube con scroll suave (mismo ajuste que Nakoa).
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === '/') {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
 
   return (
     <>
+      {/* Barra fija: transparente arriba (con una franja oscura suave si hay foto detrás);
+          al bajar toma fondo y el logo queda siempre a la vista. Patrón del navbar de Nakoa. */}
+      <div
+        className="site-header"
+        data-scrolled={scrolled}
+        data-over-dark={theme === 'dark'}
+      >
+        <div className="site-header__band" aria-hidden="true" />
+        <div className="site-header__solid" aria-hidden="true" />
+        <Link href="/" onClick={handleLogoClick} className="site-header__logo" aria-label="La Magdalena — Inicio">
+          <span className="site-header__logo-mark" aria-hidden="true" />
+        </Link>
+      </div>
+
       <button
         className={`menu-toggle ${isDetailPage ? 'on-detail' : ''} ${themeClass}`}
         onClick={() => setIsMenuOpen(!isMenuOpen)}

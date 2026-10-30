@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Logo from '@/components/atoms/Logo'
 import Heading from '@/components/atoms/Heading'
 import Text from '@/components/atoms/Text'
 import Button from '@/components/atoms/Button'
@@ -15,7 +14,7 @@ interface HeroProps {
   navTheme?: 'dark' | 'light'
 }
 
-export default function Hero({ title, subtitle, images = [], imageUrl, variant = 'default', navTheme = 'dark' }: HeroProps) {
+export default function Hero({ title, subtitle, images = [], imageUrl, variant = 'default' }: HeroProps) {
   const photoList = images.length > 0 ? images : (imageUrl ? [imageUrl] : [])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -51,9 +50,6 @@ export default function Hero({ title, subtitle, images = [], imageUrl, variant =
       onTouchEnd={onTouchEnd}
     >
       <div className="hero-container">
-        <div className="hero-static-logo-container">
-          <Logo variant="neon" className="hero-static-logo" theme={navTheme} />
-        </div>
         <div className="hero-image-wrapper">
           {photoList.map((img, index) => (
             <div key={index} className={`hero-slide ${index === currentIndex ? 'active' : ''}`}>

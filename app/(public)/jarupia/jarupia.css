@@ -348,10 +348,3 @@
       text-align: center;
   }
 }
-
-/* "Volver" del sitio: misma posición que en las historias, con área de toque de 44px. */
-.story-back-btn.jr-back {
-  min-height: 44px;
-  padding: 0 8px;
-  margin: -12px -8px;
-}

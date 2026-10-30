@@ -593,34 +593,6 @@ img {
   max-width: none;
 }
 
-.hero-static-logo-container {
-  position: fixed;
-  top: clamp(1rem, 3dvh, 2rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1100;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-static-logo {
-  height: clamp(1.875rem, 6vw, 2.784375rem) !important;
-  width: auto;
-  opacity: 1;
-  transition: filter 0.3s ease;
-  filter: none;
-}
-
-.hero-static-logo.theme-dark {
-  filter: brightness(0) saturate(100%) invert(93%) sepia(21%) saturate(1637%) hue-rotate(1deg) brightness(101%) contrast(90%);
-}
-
-.hero-static-logo.theme-light {
-  filter: brightness(0) saturate(100%) invert(21%) sepia(23%) saturate(1212%) hue-rotate(344deg) brightness(96%) contrast(92%);
-}
-
 .hero-image-wrapper {
   position: absolute;
   top: 0;
@@ -1616,7 +1588,9 @@ img {
   color: white;
   mix-blend-mode: difference;
   background: transparent;
-  padding: 0;
+  padding: 0 8px;
+  min-height: 44px;
+  margin: -12px -8px;
   border: none;
   border-radius: 0;
   transition: opacity 0.3s ease;
@@ -3290,5 +3264,104 @@ figcaption {
   .cauce-teaser__inner {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
     gap: 5rem;
+  }
+}
+
+/* ─── Barra fija con logo (patrón del navbar de Nakoa) ───
+   Arriba del todo: transparente (con una franja oscura suave cuando hay foto detrás, para que
+   el logo y las letras claras se lean). Al bajar ~24px: fondo sólido y borde fino, y el logo
+   queda siempre visible. Son dos capas que cambian de opacidad porque un degradado no se
+   puede animar hacia un color plano. */
+.site-header {
+  --nav-top: clamp(1rem, 3dvh, 2rem);
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: calc(var(--nav-top) * 2 + 22px);
+  z-index: 1000;
+  pointer-events: none;
+  color: var(--nav-light);
+}
+
+.site-header[data-scrolled='false'][data-over-dark='true'] {
+  color: var(--nav-dark);
+}
+
+.site-header__band,
+.site-header__solid {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.site-header__band {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.22) 65%, rgba(0, 0, 0, 0) 100%);
+}
+
+.site-header[data-scrolled='false'][data-over-dark='true'] .site-header__band {
+  opacity: 1;
+}
+
+.site-header__solid {
+  background: var(--bg-cream);
+  border-bottom: 1px solid rgba(92, 74, 51, 0.15);
+}
+
+.site-header[data-scrolled='true'] .site-header__solid {
+  opacity: 1;
+}
+
+.site-header__logo {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  min-width: 44px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+  /* Coral de marca sobre la barra con fondo y sobre páginas claras; lima sobre foto oscura. */
+  color: #e83b3e;
+  transition: color 0.3s ease;
+  /* El wordmark es un contorno fino: una sombra del mismo color le da un poco más de cuerpo. */
+  filter: drop-shadow(0 0 0.6px currentColor);
+}
+
+.site-header[data-scrolled='false'][data-over-dark='true'] .site-header__logo {
+  color: var(--nav-dark);
+}
+
+/* El wordmark se pinta con máscara para seguir el color de la barra. */
+.site-header__logo-mark {
+  display: block;
+  height: clamp(32px, 6vw, 48px);
+  aspect-ratio: 513 / 144;
+  background-color: currentColor;
+  -webkit-mask: url('/assets/logos/Logo%20LM-10.png') center / contain no-repeat;
+  mask: url('/assets/logos/Logo%20LM-10.png') center / contain no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header__band,
+  .site-header__solid,
+  .site-header__logo {
+    transition: none;
+  }
+}
+
+/* Móvil: el "Volver" queda en flecha y "Menú" se acerca, para que no choque con el logo centrado. */
+@media (max-width: 639px) {
+  .story-back-btn {
+    font-size: 0;
+    min-width: 44px;
+    justify-content: center;
+    padding: 0;
+    margin-left: -13px;
+  }
+
+  .menu-toggle.on-detail {
+    left: calc(var(--container-padding) + 2.9rem);
   }
 }

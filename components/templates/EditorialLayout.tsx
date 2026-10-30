@@ -3,7 +3,6 @@
 import { ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/atoms/Button'
-import NavBar from '@/components/organisms/NavBar'
 
 interface EditorialLayoutProps {
   children: ReactNode
@@ -14,7 +13,6 @@ export default function EditorialLayout({ children }: EditorialLayoutProps) {
 
   return (
     <div className="editorial-layout">
-      <NavBar />
       <Button
         variant="none"
         className="story-back-btn"

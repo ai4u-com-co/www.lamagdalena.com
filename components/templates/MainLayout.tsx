@@ -31,14 +31,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
             section.classList.contains('contact-main-section') ||
             section.classList.contains('historias-page') ||
             section.classList.contains('jarupia-page') ||
-            section.getAttribute('data-nav-theme') === 'light'
+            // data-nav-theme="light" en la sección o en un contenedor suyo (páginas de arriba claro)
+            section.closest('[data-nav-theme="light"]') !== null
           setNavTheme(isLight ? 'light' : 'dark')
         }
       })
     }
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions)
-    document.querySelectorAll('section, main > div, footer[data-nav-theme]').forEach(s => observer.observe(s))
+    document.querySelectorAll('section, main > div, [data-nav-theme]').forEach(s => observer.observe(s))
     return () => observer.disconnect()
   }, [])
 

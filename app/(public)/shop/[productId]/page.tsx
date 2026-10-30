@@ -32,7 +32,7 @@ export default function ProductDetailPage() {
   const whatsappUrl = `https://wa.me/573042644962?text=${encodeURIComponent(`Hola La Magdalena! Estoy interesado en adquirir el print: ${product.title} (Tamaño: ${selectedSize})`)}`
 
   return (
-    <main className="product-detail-page">
+    <main className="product-detail-page" data-nav-theme="light">
       <div className="container">
         <div className="product-detail-nav">
           <Breadcrumbs
