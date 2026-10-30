@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect, ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
 import NavBar from '@/components/organisms/NavBar'
+import SiteFooter from '@/components/organisms/SiteFooter'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -9,6 +11,9 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const [navTheme, setNavTheme] = useState<'dark' | 'light'>('dark')
+  const pathname = usePathname()
+  // /portafolio es un visor de PDF a pantalla completa fija: el pie quedaría oculto detrás.
+  const showFooter = !pathname.startsWith('/portafolio')
 
   useEffect(() => {
     const observerOptions = {
@@ -25,14 +30,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
             section.classList.contains('blog-section') ||
             section.classList.contains('contact-main-section') ||
             section.classList.contains('historias-page') ||
-            section.classList.contains('jarupia-page')
+            section.classList.contains('jarupia-page') ||
+            // data-nav-theme="light" en la sección o en un contenedor suyo (páginas de arriba claro)
+            section.closest('[data-nav-theme="light"]') !== null
           setNavTheme(isLight ? 'light' : 'dark')
         }
       })
     }
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions)
-    document.querySelectorAll('section, main > div').forEach(s => observer.observe(s))
+    document.querySelectorAll('section, main > div, [data-nav-theme]').forEach(s => observer.observe(s))
     return () => observer.disconnect()
   }, [])
 
@@ -42,6 +49,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <NavBar theme={navTheme} />
       </header>
       {children}
+      {showFooter && <SiteFooter />}
     </div>
   )
 }
