@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { storiesData } from '@/data/stories'
-import StoryView from '@/components/organisms/StoryView'
+import EditorialStory from '@/components/historias/EditorialStory'
 import BlogCard from '@/components/molecules/BlogCard'
 import EditorialLayout from '@/components/templates/EditorialLayout'
 
@@ -31,7 +31,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
   return (
     <EditorialLayout>
       <div className="story-detail-page">
-        <StoryView story={story} />
+        <EditorialStory story={story} />
 
         <div className="story-nav">
           {prevStory ? (
