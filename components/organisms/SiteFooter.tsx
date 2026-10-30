@@ -13,7 +13,7 @@ const explore = [
 /** Pie del sitio de La Magdalena. Mismos datos de contacto que la sección de contacto de la home. */
 export default function SiteFooter() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" data-nav-theme="light">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
           <p className="site-footer__name">La Magdalena</p>

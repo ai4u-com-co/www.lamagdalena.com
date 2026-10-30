@@ -13,16 +13,6 @@ export default function HistoriasPage() {
           </div>
         </div>
       </section>
-
-      <footer className="story-footer container" style={{ paddingBottom: '6rem', marginTop: '4rem' }}>
-        <div className="story-footer-inner">
-          <p className="story-date">La Magdalena • Historias</p>
-          <div className="story-share">
-            <span className="share-label">Síguenos:</span>
-            <a href="https://instagram.com/lamagdalena___" target="_blank" rel="noopener noreferrer">Instagram</a>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

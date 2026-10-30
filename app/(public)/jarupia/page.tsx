@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- landing portada tal cual; las fotos ya vienen optimizadas (webp) */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import SiteFooter from '@/components/organisms/SiteFooter'
 import './jarupia.css'
 
 export const metadata: Metadata = {
@@ -13,7 +12,7 @@ export const metadata: Metadata = {
 /**
  * Landing de Jarupia dentro del sitio de La Magdalena: mismo diseño de siempre
  * (marcado y estilos portados sin cambios, aislados bajo .jr-landing / jr-*),
- * ahora con el menú del sitio, un "Volver" y el pie de La Magdalena.
+ * ahora con el menú del sitio y un "Volver" (el pie de La Magdalena lo pone el layout).
  */
 export default function JarupiaPage() {
   return (
@@ -90,8 +89,6 @@ export default function JarupiaPage() {
         </section>
         
       </div>
-
-      <SiteFooter />
     </main>
   )
 }
