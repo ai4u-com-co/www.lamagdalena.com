@@ -7,11 +7,9 @@ const nextConfig: NextConfig = {
     // de ESLint no tumbe el build (patrón usado en otros repos del ecosistema).
     ignoreDuringBuilds: true,
   },
-  async rewrites() {
-    return [
-      { source: '/jarupia', destination: '/jarupia/index.html' },
-      { source: '/jarupia/', destination: '/jarupia/index.html' },
-    ]
+  async redirects() {
+    // Jarupia ahora es una página del sitio (app/(public)/jarupia); la URL del HTML estático antiguo redirige.
+    return [{ source: '/jarupia/index.html', destination: '/jarupia', permanent: true }]
   },
   images: {
     remotePatterns: [],

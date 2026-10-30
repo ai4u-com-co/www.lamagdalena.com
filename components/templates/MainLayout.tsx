@@ -25,7 +25,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
             section.classList.contains('blog-section') ||
             section.classList.contains('contact-main-section') ||
             section.classList.contains('historias-page') ||
-            section.classList.contains('jarupia-page')
+            section.classList.contains('jarupia-page') ||
+            section.getAttribute('data-nav-theme') === 'light'
           setNavTheme(isLight ? 'light' : 'dark')
         }
       })
