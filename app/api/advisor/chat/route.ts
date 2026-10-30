@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server"
+import { withErrorLog } from '@/lib/serverLog'
 
 const BACKEND_URL = process.env.MAGDALENA_BACKEND_URL ?? "https://magdalena-backend.vercel.app"
 
-export async function POST(req: NextRequest) {
+async function handlePOST(req: NextRequest) {
   const body = await req.text()
   const upstream = await fetch(`${BACKEND_URL}/api/chat`, {
     method: "POST",
@@ -19,3 +20,5 @@ export async function POST(req: NextRequest) {
   const status = Math.min(Math.max(upstream.status, 200), 599)
   return new Response(upstream.body, { status, headers: responseHeaders })
 }
+
+export const POST = withErrorLog('api/advisor/chat', handlePOST)

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { reportError } from '@/lib/serverLog'
 import fs from 'fs'
 import path from 'path'
 
@@ -23,6 +24,7 @@ export async function GET() {
     return NextResponse.json(reports)
   } catch (error) {
     console.error('Error fetching static reports:', error)
+    await reportError('api/proyeccion/informes', {}, 'falló la lectura de los informes estáticos', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

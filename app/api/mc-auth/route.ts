@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportError, withErrorLog } from '@/lib/serverLog'
 import { verifyMcToken, createSession } from '@ai4u/mc-sso'
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000
@@ -9,11 +10,12 @@ const SERVICE_REDIRECTS: Record<string, string> = {
   'magdalena':            '/dashboard', // legacy fallback
 }
 
-export async function POST(req: NextRequest) {
+async function handlePOST(req: NextRequest) {
   const form   = await req.formData()
   const token  = String(form.get('token') ?? '')
   const secret = process.env.MISSION_CONTROL_SECRET
   if (!secret) {
+    await reportError('api/mc-auth', {}, 'falta MISSION_CONTROL_SECRET en el servidor', new Error('MissingMissionControlSecret'))
     return NextResponse.json({ error: 'Configuración de servidor incompleta' }, { status: 500 })
   }
 
@@ -45,3 +47,5 @@ export async function POST(req: NextRequest) {
   })
   return res
 }
+
+export const POST = withErrorLog('api/mc-auth', handlePOST)

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse, after } from 'next/server'
+import { reportError, reportWarn, withErrorLog } from '@/lib/serverLog'
 import { getSovJob, updateSovJob, appendSovRawData } from '@/lib/sov-supabase'
 import { fetchDatasetItems, getRunCostUsd, getRunInfo } from '@/lib/apify'
 import { calculateSov, generateSovInsights } from '@/lib/sov-calculator'
 
-export async function POST(
+async function handlePOST(
   request: NextRequest,
   { params }: { params: Promise<{ sovId: string }> }
 ) {
@@ -36,6 +37,7 @@ export async function POST(
   const job = await getSovJob(sovId)
   if (!job) {
     console.error(`[SOV Webhook] Job ${sovId} not found`)
+    await reportWarn('api/sov/apify-webhook', { sovId }, 'webhook para un job SOV inexistente', new Error('SovJobNotFound'))
     return NextResponse.json({ error: 'Job not found' }, { status: 404 })
   }
 
@@ -48,6 +50,7 @@ export async function POST(
 
   if (eventType === 'ACTOR.RUN.FAILED') {
     console.error(`[SOV Webhook] Run ${runId} (${runKey}) failed`)
+    await reportError('api/sov/apify-webhook', { sovId, runKey }, 'el run de Apify terminó en FAILED', new Error('ApifyRunFailed'))
     const { completedRuns, totalExpected } = await appendSovRawData(sovId, runKey, [], runKey)
     if (completedRuns.length >= totalExpected) {
       after(() => triggerAnalysis(sovId))
@@ -67,6 +70,7 @@ export async function POST(
       resolvedDatasetId = runInfo.defaultDatasetId
     } catch (err) {
       console.error(`[SOV Webhook] Could not resolve datasetId for run ${runId}:`, err)
+      await reportError('api/sov/apify-webhook', { sovId, runKey }, 'no se pudo resolver el dataset del run', err)
     }
   }
   let items: unknown[] = []
@@ -76,9 +80,11 @@ export async function POST(
       console.log(`[SOV Webhook] Fetched ${items.length} items for ${runKey}`)
     } catch (err) {
       console.error(`[SOV Webhook] Failed to fetch dataset for ${runKey}:`, err)
+      await reportError('api/sov/apify-webhook', { sovId, runKey }, 'no se pudo leer el dataset del run', err)
     }
   } else {
     console.error(`[SOV Webhook] No datasetId available for ${runKey}, storing 0 items`)
+    await reportError('api/sov/apify-webhook', { sovId, runKey }, 'run sin datasetId, se guardan 0 items', new Error('MissingDatasetId'))
   }
 
   const { completedRuns, totalExpected } = await appendSovRawData(sovId, runKey, items, runKey)
@@ -90,6 +96,8 @@ export async function POST(
 
   return NextResponse.json({ ok: true })
 }
+
+export const POST = withErrorLog('api/sov/apify-webhook', handlePOST)
 
 async function triggerAnalysis(sovId: string) {
   try {
@@ -117,6 +125,7 @@ async function triggerAnalysis(sovId: string) {
     console.log(`[SOV] Analysis complete for ${sovId}, cost: $${totalCost.toFixed(4)}`)
   } catch (err) {
     console.error(`[SOV] Analysis failed for ${sovId}:`, err)
+    await reportError('api/sov/apify-webhook', { sovId }, 'falló el análisis SOV', err)
     await updateSovJob(sovId, {
       status: 'error',
       error: err instanceof Error ? err.message : 'Error en análisis',

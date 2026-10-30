@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportError, withErrorLog } from '@/lib/serverLog'
 import { getSovJob, appendSovRawData, updateSovJob } from '@/lib/sov-supabase'
 import { getRunInfo, fetchDatasetItems } from '@/lib/apify'
 import { calculateSov, generateSovInsights } from '@/lib/sov-calculator'
 
-export async function POST(
+async function handlePOST(
   _req: NextRequest,
   { params }: { params: Promise<{ sovId: string }> }
 ) {
@@ -43,12 +44,14 @@ export async function POST(
           items = await fetchDatasetItems(runInfo.defaultDatasetId, 1000)
         } catch (e) {
           console.error(`[SOV Recover] Failed to fetch dataset for ${runKey}:`, e)
+          await reportError('api/sov/recover', { sovId, runKey }, 'no se pudo leer el dataset del run', e)
         }
       }
       await appendSovRawData(sovId, runKey, items, runKey)
       console.log(`[SOV Recover] Marked ${runKey} complete with ${items.length} items`)
     } catch (e) {
       console.error(`[SOV Recover] Error checking run ${runKey}:`, e)
+      await reportError('api/sov/recover', { sovId, runKey }, 'error al revisar el run de Apify', e)
     }
   }
 
@@ -80,6 +83,7 @@ export async function POST(
     return NextResponse.json({ message: 'Recovered and analysis complete' })
   } catch (e) {
     console.error(`[SOV Recover] Analysis failed:`, e)
+    await reportError('api/sov/recover', { sovId }, 'falló el análisis SOV en la recuperación', e)
     await updateSovJob(sovId, {
       status: 'error',
       error: e instanceof Error ? e.message : 'Error en análisis',
@@ -87,3 +91,5 @@ export async function POST(
     return NextResponse.json({ error: 'Analysis failed' }, { status: 500 })
   }
 }
+
+export const POST = withErrorLog('api/sov/recover', handlePOST)

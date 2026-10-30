@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { reportError } from '@/lib/serverLog'
 import { getSovJob } from '@/lib/sov-supabase'
 
 export async function GET(
@@ -11,6 +12,7 @@ export async function GET(
     if (!job) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
     return NextResponse.json(job)
   } catch (error) {
+    await reportError('api/sov/get', {}, 'no se pudo leer el reporte SOV', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Error interno' },
       { status: 500 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse, after } from 'next/server'
+import { reportError, reportWarn, withErrorLog } from '@/lib/serverLog'
 export const dynamic = 'force-dynamic'
 
 import { loadJob, loadRawData, updateJobStatus, saveAnalysis, savePdf } from '@/lib/supabase'
@@ -8,7 +9,7 @@ interface Params {
   params: Promise<{ reportId: string }>
 }
 
-export async function POST(request: NextRequest, { params }: Params) {
+async function handlePOST(request: NextRequest, { params }: Params) {
   const { reportId } = await params
   const force = new URL(request.url).searchParams.has('force')
 
@@ -24,7 +25,8 @@ export async function POST(request: NextRequest, { params }: Params) {
     if (!Array.isArray(rawData) || rawData.length === 0) {
       return NextResponse.json({ error: 'No data available to retry — rescraping required' }, { status: 400 })
     }
-  } catch {
+  } catch (err) {
+    await reportWarn('api/reports/retry', { reportId }, 'no se pudo leer la data cruda para reintentar', err)
     return NextResponse.json({ error: 'No data available to retry — rescraping required' }, { status: 400 })
   }
 
@@ -49,9 +51,12 @@ export async function POST(request: NextRequest, { params }: Params) {
       const pdfUrl = await savePdf(reportId, pdfBuffer)
       await updateJobStatus(reportId, { status: 'complete', pdfUrl, error: undefined, generationCostUSD: +claudeCostUSD.toFixed(4) })
     } catch (err: any) {
+      await reportError('api/reports/retry', { reportId }, 'falló el pipeline de reintento (análisis/PDF)', err)
       await updateJobStatus(reportId, { status: 'error', error: err.message })
     }
   })
 
   return NextResponse.json({ ok: true })
 }
+
+export const POST = withErrorLog('api/reports/retry', handlePOST)
