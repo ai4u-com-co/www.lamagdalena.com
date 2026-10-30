@@ -1,13 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Story, StoryBlock } from '@/data/stories'
 import './editorial-story.css'
 
 /**
  * Página de una historia en formato editorial (referente: nota larga tipo Atmos):
  * foto de apertura a sangre, encabezado centrado, una columna de texto angosta y
- * fotos más anchas que el texto, solas o en parejas, con pie de foto.
+ * fotos más anchas que el texto: solas, o en carrusel cuando hay varias seguidas.
  *
  * Los textos de `image-text` más cortos que CAPTION_MAX son pies de foto
  * ("La tronera, Peñón - Santander"), no párrafos.
@@ -19,7 +19,7 @@ type Photo = { url: string; caption?: string }
 type Item =
   | { kind: 'text'; paragraphs: string[] }
   | { kind: 'photo'; photo: Photo }
-  | { kind: 'pair'; photos: [Photo, Photo]; caption?: string }
+  | { kind: 'carousel'; photos: Photo[]; caption?: string }
   | { kind: 'quote'; text: string; author?: string }
 
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim()
@@ -28,15 +28,10 @@ function buildItems(content: StoryBlock[], lead: string): Item[] {
   const items: Item[] = []
   let run: Photo[] = []
 
-  // Fotos sueltas consecutivas: si son impares, la primera va sola y el resto en parejas.
+  // Varias fotos sueltas seguidas se agrupan en un carrusel; una sola va a lo ancho.
   const flush = () => {
     if (!run.length) return
-    let rest = run
-    if (run.length % 2 === 1) {
-      items.push({ kind: 'photo', photo: run[0] })
-      rest = run.slice(1)
-    }
-    for (let i = 0; i < rest.length; i += 2) items.push({ kind: 'pair', photos: [rest[i], rest[i + 1]] })
+    items.push(run.length === 1 ? { kind: 'photo', photo: run[0] } : { kind: 'carousel', photos: run })
     run = []
   }
 
@@ -68,7 +63,7 @@ function buildItems(content: StoryBlock[], lead: string): Item[] {
       }
       case 'image-duo':
         flush()
-        if (b.imageLeft && b.imageRight) items.push({ kind: 'pair', photos: [{ url: b.imageLeft }, { url: b.imageRight }], caption: b.caption })
+        if (b.imageLeft && b.imageRight) items.push({ kind: 'carousel', photos: [{ url: b.imageLeft }, { url: b.imageRight }], caption: b.caption })
         break
       case 'text':
         flush()
@@ -95,6 +90,72 @@ function inline(text: string) {
   })
 }
 
+/**
+ * Carrusel horizontal (scroll-snap) para varias fotos seguidas: todas a la misma
+ * altura, sin recortar ninguna; la siguiente asoma para invitar a deslizar.
+ * Con flechas y contador; también se desliza con el dedo y con las flechas del teclado.
+ */
+function Carousel({ photos, alt, onOpen }: { photos: Photo[]; alt: string; onOpen: (url: string) => void }) {
+  const scroller = useRef<HTMLDivElement>(null)
+  const [index, setIndex] = useState(0)
+  const [edge, setEdge] = useState({ start: true, end: false })
+
+  const sync = useCallback(() => {
+    const el = scroller.current
+    if (!el) return
+    const slides = Array.from(el.children) as HTMLElement[]
+    const first = slides.findIndex(sl => sl.offsetLeft + sl.offsetWidth / 2 > el.scrollLeft + 1)
+    setIndex(Math.max(0, first))
+    setEdge({ start: el.scrollLeft <= 1, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 1 })
+  }, [])
+
+  useEffect(() => {
+    sync()
+    window.addEventListener('resize', sync)
+    return () => window.removeEventListener('resize', sync)
+  }, [sync])
+
+  const go = (dir: 1 | -1) => {
+    const el = scroller.current
+    if (!el) return
+    const slides = Array.from(el.children) as HTMLElement[]
+    const target = slides[Math.min(slides.length - 1, Math.max(0, index + dir))]
+    el.scrollTo({ left: target.offsetLeft, behavior: 'smooth' })
+  }
+
+  return (
+    <div className="story-ed__carousel">
+      <div
+        ref={scroller}
+        className="story-ed__track"
+        role="region"
+        aria-roledescription="carrusel"
+        aria-label={`Fotos de la historia (${photos.length})`}
+        tabIndex={0}
+        onScroll={sync}
+      >
+        {photos.map(p => (
+          <div key={p.url} className="story-ed__slide">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={p.url} alt={p.caption ?? alt} loading="lazy" decoding="async" onClick={() => onOpen(p.url)} />
+          </div>
+        ))}
+      </div>
+      <div className="story-ed__carousel-ctrl">
+        <button type="button" onClick={() => go(-1)} disabled={edge.start} aria-label="Foto anterior">
+          ‹
+        </button>
+        <button type="button" onClick={() => go(1)} disabled={edge.end} aria-label="Foto siguiente">
+          ›
+        </button>
+        <span aria-live="polite">
+          {Math.min(index + 1, photos.length)} / {photos.length}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export default function EditorialStory({ story }: { story: Story }) {
   const hero = story.content.find(b => b.type === 'hero')
   const lead = hero?.subtitle ?? ''
@@ -105,7 +166,7 @@ export default function EditorialStory({ story }: { story: Story }) {
     const list: Photo[] = hero?.image ? [{ url: hero.image }] : []
     for (const it of items) {
       if (it.kind === 'photo') list.push(it.photo)
-      if (it.kind === 'pair') list.push(...it.photos)
+      if (it.kind === 'carousel') list.push(...it.photos)
     }
     return list
   }, [items, hero?.image])
@@ -171,13 +232,10 @@ export default function EditorialStory({ story }: { story: Story }) {
                   {it.photo.caption && <figcaption>{it.photo.caption}</figcaption>}
                 </figure>
               )
-            case 'pair':
+            case 'carousel':
               return (
-                <figure key={i} className="story-ed__figure story-ed__pair">
-                  <div className="story-ed__pair-grid">
-                    <Img photo={it.photos[0]} alt={story.title} />
-                    <Img photo={it.photos[1]} alt={story.title} />
-                  </div>
+                <figure key={i} className="story-ed__figure">
+                  <Carousel photos={it.photos} alt={story.title} onOpen={openUrl} />
                   {it.caption && <figcaption>{it.caption}</figcaption>}
                 </figure>
               )

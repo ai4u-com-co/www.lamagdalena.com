@@ -136,18 +136,73 @@
   letter-spacing: 0.02em;
 }
 
-/* Parejas de fotos: lado a lado desde 640px; el lightbox abre la foto completa. */
-.story-ed__pair-grid {
-  display: grid;
-  gap: 12px;
-  align-items: center; /* sin recortar: fotos de distinta proporción quedan centradas */
+/* Carrusel: misma altura para todas las fotos, sin recorte; la siguiente asoma. */
+.story-ed__carousel {
+  --slide-h: clamp(220px, 62vw, 520px);
 }
 
-@media (min-width: 640px) {
-  .story-ed__pair-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
+.story-ed__track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.story-ed__track::-webkit-scrollbar {
+  display: none;
+}
+
+.story-ed__track:focus-visible {
+  outline: 2px solid var(--text-brown);
+  outline-offset: 4px;
+}
+
+.story-ed__slide {
+  flex: 0 0 auto;
+  height: var(--slide-h);
+  scroll-snap-align: start;
+  background: #f1eee9;
+}
+
+.story-ed__track .story-ed__slide img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  min-width: 140px;
+}
+
+.story-ed__carousel-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.story-ed__carousel-ctrl button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--text-brown);
+  transition: opacity 0.4s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+.story-ed__carousel-ctrl button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.story-ed__carousel-ctrl span {
+  margin-left: 8px;
 }
 
 .story-ed__quote {
