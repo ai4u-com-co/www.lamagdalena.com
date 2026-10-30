@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- landing portada tal cual; las fotos ya vienen optimizadas (webp) */
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import SiteFooter from '@/components/organisms/SiteFooter'
@@ -43,13 +44,11 @@ export default function JarupiaPage() {
             </div>
           </div>
           <div className="jr-hero-visual">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/jarupia/assets/redesign/hero-book.webp" alt="Portada del libro Jarupia — El secreto de Ayapel" width="1095" height="1367" />
           </div>
         </section>
         <section data-nav-theme="light" className="jr-sinopsis" id="historia">
           <div className="jr-sinopsis-visual">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/jarupia/assets/redesign/sinopsis-tree.webp" alt="La gran ceiba de la Jarupia" width="985" height="1227" loading="lazy" />
           </div>
           <div className="jr-sinopsis-text">
@@ -58,22 +57,22 @@ export default function JarupiaPage() {
             <p>Hasta el día en que un manatí llamado Obi lo arrastró a través de las puertas de otro mundo. Un lugar virgen, sin huella humana, donde el agua es transparente y los árboles llevan siglos transmitiendo lo que saben.</p>
             <p>En La Jarupia, Alejo conoce a Tyron —el Hombre Hicotea— que le advierte: la única forma de regresar a casa es que Cachime lo autorice. Y eso no pasa desde hace muchos años.</p>
             <blockquote>
-              "Ustedes creen que saben muchas cosas, pero en realidad olvidaron lo más básico y sin eso no se puede entender nada."
+              &quot;Ustedes creen que saben muchas cosas, pero en realidad olvidaron lo más básico y sin eso no se puede entender nada.&quot;
               <cite>— Tyron, el Hombre Hicotea</cite>
             </blockquote>
           </div>
         </section>
         <section data-nav-theme="light" className="jr-galeria" id="galeria">
           <div className="jr-galeria-row jr-galeria-row-3">
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-1.webp" alt="Página del libro Jarupia" loading="lazy" /></div>
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-2.webp" alt="Tela azul sobre la ciénaga al atardecer" loading="lazy" /></div>
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-3.webp" alt="Mano sosteniendo un fruto" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-1.webp" alt="Página del libro Jarupia" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-2.webp" alt="Tela azul sobre la ciénaga al atardecer" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-3.webp" alt="Mano sosteniendo un fruto" loading="lazy" /></div>
           </div>
           <div className="jr-galeria-row jr-galeria-row-4">
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-4.webp" alt="Mapa ilustrado de la Jarupia" loading="lazy" /></div>
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-5.webp" alt="Vía láctea sobre la vegetación de la ciénaga" loading="lazy" /></div>
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-6.webp" alt="Página del libro Jarupia con ramas" loading="lazy" /></div>
-            <div className="jr-galeria-item">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/jarupia/assets/redesign/gal-7.webp" alt="Retrato con vestimenta tejida" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-4.webp" alt="Mapa ilustrado de la Jarupia" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-5.webp" alt="Vía láctea sobre la vegetación de la ciénaga" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-6.webp" alt="Página del libro Jarupia con ramas" loading="lazy" /></div>
+            <div className="jr-galeria-item"><img src="/jarupia/assets/redesign/gal-7.webp" alt="Retrato con vestimenta tejida" loading="lazy" /></div>
           </div>
         </section>
         <section data-nav-theme="light" className="jr-autor" id="autor">
@@ -86,7 +85,6 @@ export default function JarupiaPage() {
             <a href="mailto:Chino@lamagdalena.com.co" className="jr-autor-link" id="jr-link-autor-email">Chino@lamagdalena.com.co</a>
           </div>
           <div className="jr-autor-visual">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/jarupia/assets/redesign/autor-portrait.webp" alt="Retrato de Chino Romero Hoyos" width="1220" height="1536" loading="lazy" />
           </div>
         </section>
