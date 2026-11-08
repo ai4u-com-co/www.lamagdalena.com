@@ -3322,8 +3322,8 @@ figcaption {
   display: flex;
   align-items: center;
   pointer-events: auto;
-  /* Coral de marca sobre la barra con fondo y sobre páginas claras; lima sobre foto oscura. */
-  color: #e83b3e;
+  /* Café de marca (--nav-light) sobre la barra con fondo y sobre páginas claras; lima sobre foto oscura. */
+  color: var(--nav-light);
   transition: color 0.3s ease;
   /* El wordmark es un contorno fino: una sombra del mismo color le da un poco más de cuerpo. */
   filter: drop-shadow(0 0 0.6px currentColor);
