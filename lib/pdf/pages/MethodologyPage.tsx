@@ -68,7 +68,7 @@ export const MethodologyPage = ({ methodology }: MethodologyPageProps) => (
       <View style={{ marginTop: 30 }}>
         <Text style={{ ...styles.sourceTitle, color: 'rgba(255,255,255,0.4)' }}>Procesamiento de Inteligencia Artificial</Text>
         <Text style={styles.paragraph}>
-          Los insights han sido generados mediante el modelo Anthropic Claude 4.6 (Mayo 2026), entrenado para análisis de 
+          Los insights han sido generados mediante el modelo Anthropic Claude Sonnet 5.5, entrenado para análisis de 
           sentimiento profundo y detección de patrones estratégicos en grandes volúmenes de datos sociales.
         </Text>
       </View>

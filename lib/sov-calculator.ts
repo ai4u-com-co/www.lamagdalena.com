@@ -326,7 +326,7 @@ export async function generateSovInsights(
     .join('\n')
 
   const { text } = await generateText({
-    model: anthropic('claude-sonnet-4-6'),
+    model: anthropic('claude-sonnet-5-5'),
     prompt: `Eres un estratega de marketing digital experto en posicionamiento de marca para el mercado colombiano y latinoamericano. Analiza los siguientes datos de Share of Voice para el cliente ${clientName} y genera un análisis estratégico conciso en español.
 
 **Datos de Share of Voice:**
