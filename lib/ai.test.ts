@@ -54,9 +54,9 @@ describe("llave de Anthropic por tenant (MAGDALENA)", () => {
   it("anthropic(modelo) crea el proveedor con la llave del tenant leída en la llamada", () => {
     const propia = valor("magdalena")
     vi.stubEnv("MAGDALENA_ANTHROPIC_API_KEY", propia)
-    const model = anthropic("claude-sonnet-4-6")
+    const model = anthropic("claude-sonnet-5-5")
     expect(createAnthropic).toHaveBeenCalledTimes(1)
     expect(createAnthropic).toHaveBeenCalledWith({ apiKey: propia })
-    expect(model.modelId).toBe("claude-sonnet-4-6")
+    expect(model.modelId).toBe("claude-sonnet-5-5")
   })
 })

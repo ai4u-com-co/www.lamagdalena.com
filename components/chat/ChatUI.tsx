@@ -17,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { MarkdownContent } from "./MarkdownContent"
 import { useThreads, type Thread } from "./hooks/useThreads"
 import { useSuggestions } from "./hooks/useSuggestions"
+import { DEFAULT_MODEL, MODEL_OPTIONS, type ModelId } from "@/lib/chat-models"
 
 
 const TOOL_LABELS: Record<string, string> = {
@@ -28,14 +29,6 @@ const TOOL_LABELS: Record<string, string> = {
   ejecutar_accion:      "Ejecutando acción",
 }
 
-type ModelId = "claude-haiku-4.5" | "claude-sonnet-4.6" | "claude-opus-4.8"
-const DEFAULT_MODEL: ModelId = "claude-sonnet-4.6"
-
-const MODEL_OPTIONS: Array<{ id: ModelId; label: string; description: string; ctxK: number }> = [
-  { id: "claude-haiku-4.5",  label: "Rápido",         description: "Claude Haiku 4.5 — consultas simples y rápidas, menor costo",                ctxK: 200  },
-  { id: "claude-sonnet-4.6", label: "Balanceado",      description: "Claude Sonnet 4.6 — ideal para la mayoría de consultas (predeterminado)", ctxK: 1000 },
-  { id: "claude-opus-4.8",   label: "Máxima IA ⚡",    description: "Claude Opus 4.8 — análisis complejos y razonamiento profundo. Más costoso.",   ctxK: 1000 },
-]
 
 // Context limit: Claude Sonnet 200k tokens. Alert zones:
 const CTX_WARN  = 120_000

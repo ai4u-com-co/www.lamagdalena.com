@@ -1,5 +1,6 @@
 import { generateText, Output } from 'ai'
 import { anthropic } from './ai'
+import { claudeCostFromUsage } from './claude-pricing'
 import { z } from 'zod'
 
 const AnalysisSchema = z.object({
@@ -71,9 +72,6 @@ export interface AnalysisResult {
   claudeCostUSD: number
 }
 
-// claude-sonnet-4.6 pricing: $3/MTok input, $15/MTok output
-const CLAUDE_INPUT_PRICE_PER_TOKEN = 3 / 1_000_000
-const CLAUDE_OUTPUT_PRICE_PER_TOKEN = 15 / 1_000_000
 
 interface ReportContext {
   clientName: string
@@ -234,7 +232,7 @@ export async function analyzeData(rawData: unknown[], context: ReportContext): P
   const commentTexts = comments.slice(0, 150).map((c: any) => c.text).filter(Boolean)
 
   const { output: qualitative, usage } = await generateText({
-    model: anthropic('claude-sonnet-4.6'),
+    model: anthropic('claude-sonnet-5-5'),
     output: Output.object({ schema: QualitativeSchema }),
     prompt: `Eres un Consultor Estratégico Senior de "La Magdalena". Genera un análisis para: ${context.clientName}.${dateWarning}
 
@@ -263,9 +261,7 @@ INSTRUCCIONES:
 5. recommendations: Máximo 5 acciones de negocio concretas con prioridad.`,
   })
 
-  const claudeCostUSD =
-    ((usage.inputTokens ?? 0) * CLAUDE_INPUT_PRICE_PER_TOKEN) +
-    ((usage.outputTokens ?? 0) * CLAUDE_OUTPUT_PRICE_PER_TOKEN)
+  const claudeCostUSD = claudeCostFromUsage(usage)
 
   return {
     analysis: {
