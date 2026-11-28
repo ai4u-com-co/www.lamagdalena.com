@@ -37,3 +37,6 @@ build
 # Secretos locales / volcados de Vercel — no commitear
 .env.temp
 .env.vercel.production
+
+# Worktrees locales de Claude Code: nunca al repo (un gitlink suelto rompe el checkout de Actions)
+.claude/worktrees/
